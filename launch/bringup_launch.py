@@ -58,9 +58,7 @@ def generate_launch_description():
                 parameters=[configured_params],
                 arguments=['-i', sl.arg('usb_port')])
 
-        with sl.group(if_arg='cam'):
-            sl.node('v4l2_camera', 'v4l2_camera_node',
-                    parameters = {'width': 640, 'height': 480,
-                                  'camera_info_url': sl.find('turtlebot3_xacro', 'pi_camera.yaml')})
+    with sl.group(if_arg='cam'):
+        sl.include('turtlebot3_xacro', 'cam_launch.py', launch_arguments={'name': name})
 
     return sl.launch_description()
