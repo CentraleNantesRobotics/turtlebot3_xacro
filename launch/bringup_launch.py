@@ -60,6 +60,7 @@ def generate_launch_description():
 
         with sl.group(if_arg='cam'):
             sl.node('v4l2_camera', 'v4l2_camera_node',
-                    parameters = {'width': 640, 'height': 480})
+                    parameters = {'width': 640, 'height': 480,
+                                  'camera_info_url': sl.find('turtlebot3_xacro', 'pi_camera.yaml')})
 
     return sl.launch_description()

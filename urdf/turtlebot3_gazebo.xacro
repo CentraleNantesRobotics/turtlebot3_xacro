@@ -193,7 +193,7 @@
 <!--link : https://www.raspberrypi.org/documentation/hardware/camera/-->
   <xacro:if value="$(arg use_cam)">
   <gazebo reference="$(arg prefix)camera_rgb_frame">
-    <sensor type="camera" name="PiCamera">
+    <sensor type="camera" name="pi_camera">
       <always_on>true</always_on>
       <visualize>$(arg camera_visual)</visualize>
       <camera>
