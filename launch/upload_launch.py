@@ -1,6 +1,7 @@
 import os
 from simple_launch import SimpleLauncher, GazeboBridge
 
+
 def generate_launch_description():
 
     TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
@@ -19,7 +20,7 @@ def generate_launch_description():
     
     with sl.group(ns=name):
         
-        sl.robot_state_publisher('turtlebot3_description','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro', 
+        sl.robot_state_publisher('turtlebot3_xacro','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro',
                                  xacro_args={'prefix': sl.name_join(name, '/')})
 
         sl.spawn_gz_model(name,
