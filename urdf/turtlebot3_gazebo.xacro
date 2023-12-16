@@ -7,51 +7,51 @@
  <xacro:arg name="odom_topic"    default="odom"/>
  <xacro:arg name="publish_odom"    default="false"/>
  
-  <gazebo reference="$(arg prefix)base_link">
-    <material>Gazebo/DarkGrey</material>
-  </gazebo>
+<gazebo reference="$(arg prefix)base_link">
+  <material>Gazebo/DarkGrey</material>
+</gazebo>
 
-  <gazebo reference="$(arg prefix)wheel_left_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
-    <kp>500000.0</kp>
-    <kd>10.0</kd>
-    <minDepth>0.001</minDepth>
-    <maxVel>0.1</maxVel>
-    <fdir1>1 0 0</fdir1>
-    <material>Gazebo/FlatBlack</material>
-  </gazebo>
+<gazebo reference="$(arg prefix)wheel_left_link">
+  <mu1>0.1</mu1>
+  <mu2>0.1</mu2>
+  <kp>500000.0</kp>
+  <kd>10.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>0.1</maxVel>
+  <fdir1>1 0 0</fdir1>
+  <material>Gazebo/FlatBlack</material>
+</gazebo>
 
-  <gazebo reference="$(arg prefix)wheel_right_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
-    <kp>500000.0</kp>
-    <kd>10.0</kd>
-    <minDepth>0.001</minDepth>
-    <maxVel>0.1</maxVel>
-    <fdir1>1 0 0</fdir1>
-    <material>Gazebo/FlatBlack</material>
-  </gazebo>
+<gazebo reference="$(arg prefix)wheel_right_link">
+  <mu1>0.1</mu1>
+  <mu2>0.1</mu2>
+  <kp>500000.0</kp>
+  <kd>10.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>0.1</maxVel>
+  <fdir1>1 0 0</fdir1>
+  <material>Gazebo/FlatBlack</material>
+</gazebo>
 
-  <gazebo reference="$(arg prefix)caster_back_right_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <minDepth>0.001</minDepth>
-    <maxVel>1.0</maxVel>
-    <material>Gazebo/FlatBlack</material>
-  </gazebo>
+<gazebo reference="$(arg prefix)caster_back_right_link">
+  <mu1>0.1</mu1>
+  <mu2>0.1</mu2>
+  <kp>1000000.0</kp>
+  <kd>100.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>1.0</maxVel>
+  <material>Gazebo/FlatBlack</material>
+</gazebo>
 
-  <gazebo reference="$(arg prefix)caster_back_left_link">
-    <mu1>0.1</mu1>
-    <mu2>0.1</mu2>
-    <kp>1000000.0</kp>
-    <kd>100.0</kd>
-    <minDepth>0.001</minDepth>
-    <maxVel>1.0</maxVel>
-    <material>Gazebo/FlatBlack</material>
-  </gazebo>
+<gazebo reference="$(arg prefix)caster_back_left_link">
+  <mu1>0.1</mu1>
+  <mu2>0.1</mu2>
+  <kp>1000000.0</kp>
+  <kd>100.0</kd>
+  <minDepth>0.001</minDepth>
+  <maxVel>1.0</maxVel>
+  <material>Gazebo/FlatBlack</material>
+</gazebo>
 
   <gazebo reference="$(arg prefix)imu_link">
     <sensor name="tb3_imu" type="imu">
@@ -105,21 +105,23 @@
     <material>Gazebo/Grey</material>
   </gazebo>
 
+
  <gazebo>
     <plugin
-      filename="libignition-gazebo-diff-drive-system.so"
-      name="ignition::gazebo::systems::DiffDrive">
+      filename="libgz-sim-diff-drive-system.so"
+      name="gz::sim::systems::DiffDrive">
       <left_joint>wheel_left_joint</left_joint>
       <right_joint>wheel_right_joint</right_joint>
       <wheel_separation>${wheel_separation}</wheel_separation>
       <wheel_radius>0.033</wheel_radius>
       <child_frame_id>$(arg prefix)base_footprint</child_frame_id>
     </plugin>
+
 </gazebo>
-    
+
   <gazebo reference="$(arg prefix)base_scan">
     <material>Gazebo/FlatBlack</material>
-    <sensor type="ray" name="lds_lfcd_sensor">
+    <sensor type="gpu_lidar" name="lds_lfcd_sensor">
       <pose>0 0 0 0 0 0</pose>
       <update_rate>5</update_rate>
       <topic>$(arg prefix)scan</topic>
@@ -149,11 +151,12 @@
 
 <!--link : https://www.raspberrypi.org/documentation/hardware/camera/-->
   <xacro:if value="$(arg use_cam)">
+
   <gazebo reference="$(arg prefix)camera_rgb_frame">
     <sensor type="camera" name="pi_camera">
       <always_on>true</always_on>
       <camera>
-        <optical_frame_id>$(arg prefix)camera_rgb_frame</optical_frame_id>
+        <optical_frame_id>$(arg prefix)camera_rgb_optical_frame</optical_frame_id>
           <horizontal_fov>1.085595</horizontal_fov>
           <image>
               <width>640</width>
@@ -168,11 +171,13 @@
        <topic>$(arg prefix)image</topic>
       <enable_metrics>false</enable_metrics>
     </sensor>
+
   </gazebo>
 </xacro:if>
   
    <gazebo>
       <plugin filename="libignition-gazebo-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher"/>                          
+
     </gazebo>
     
 </robot>
