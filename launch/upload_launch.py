@@ -26,24 +26,26 @@ def generate_launch_description():
         sl.spawn_gz_model(name,
                           spawn_args = [[f'-{tag} ', sl.arg(axis)] for axis,tag in (('x','x'),('y','y'),('z','z'),('yaw','Y'))])
         
-        # TODO run bridges for odometry / camera / scanner
         bridges = [GazeboBridge.clock()]
         # joint states
         gz_js_topic = sl.name_join(GazeboBridge.model_prefix(name),'/joint_state')
         bridges.append(GazeboBridge(gz_js_topic, 'joint_states', 'sensor_msgs/JointState', GazeboBridge.gz2ros))
         
-        # odom
         bridges.append(GazeboBridge(GazeboBridge.model_topic(name, 'odometry'),
                                      'odom', 'nav_msgs/Odometry', GazeboBridge.gz2ros))
         
-        # diff drive
         bridges.append(GazeboBridge(GazeboBridge.model_topic(name, 'cmd_vel'),
                                      'cmd_vel', 'geometry_msgs/Twist', GazeboBridge.ros2gz))
+
+        bridges.append(GazeboBridge(name / 'imu', 'imu', 'sensor_msgs/Imu', GazeboBridge.gz2ros))
+
+        bridges.append(GazeboBridge(name / 'image', 'image', 'sensor_msgs/Image', GazeboBridge.gz2ros))
+
+        bridges.append(GazeboBridge(name / 'scan', 'scan', 'sensor_msgs/LaserScan', GazeboBridge.gz2ros))
+
         sl.create_gz_bridge(bridges)
         
         with sl.group(if_arg='gui'):
             sl.node('slider_publisher', arguments=[sl.find('slider_publisher', 'Twist.yaml')])
-        
-
 
     return sl.launch_description()
