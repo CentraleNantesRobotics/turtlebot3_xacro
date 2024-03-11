@@ -7,6 +7,6 @@ if [[ -z $tbot_current ]]; then
 else
     echo "Adding ROS 2 stack to crontab"
     THIS_SCRIPT=$(readlink -f $0)
-    THIS_DIR=`dirname $SCRIPT`
+    THIS_DIR=`dirname $THIS_SCRIPT`
     (crontab -l 2>/dev/null; echo "@reboot $THIS_DIR/bringup.sh") | crontab -
 fi
