@@ -44,7 +44,7 @@ def generate_launch_description():
         bridges.append(GazeboBridge(name/'image', 'image', 'sensor_msgs/Image', GazeboBridge.gz2ros))
 
         # LiDAR
-        bridges.append(GazeboBridge(name/'scan', 'scan', 'sensor_msgs/LaserScan', GazeboBridge.gz2ros))
+        bridges.append(GazeboBridge(name/'scan/points', 'scan', 'sensor_msgs/LaserScan', GazeboBridge.gz2ros))
 
         sl.create_gz_bridge(bridges)
         

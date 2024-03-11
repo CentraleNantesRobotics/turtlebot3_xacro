@@ -151,13 +151,20 @@
     </inertial>
   </link>
 
-  <joint name="imu_joint" type="fixed">
+  <joint name="imu_joint" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="1000.0" lower="0.0" upper="0" velocity="0"/>
     <parent link="$(arg prefix)base_link"/>
     <child link="$(arg prefix)imu_link"/>
     <origin xyz="0.0 0 0.068" rpy="0 0 0"/>
   </joint>
 
-  <link name="$(arg prefix)imu_link"/>
+  <link name="$(arg prefix)imu_link">
+        <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="0.00000542" ixy="0.0" ixz="0.0" iyy="0.00002104" iyz="0.0" izz="0.00002604"/>
+    </inertial>
+  </link>
 
   <joint name="scan_joint" type="fixed">
     <parent link="$(arg prefix)base_link"/>
