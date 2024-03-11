@@ -15,9 +15,13 @@
   <author email="thlim@robotis.com">Darby Lim</author>
   <author email="pyo@robotis.com">Pyo</author>
   <buildtool_depend>ament_cmake</buildtool_depend>
-  <depend>urdf</depend>
-  <depend>simple_launch</depend>
-  <depend>turtlebot3_description</depend>
+  <exec_depend>urdf</exec_depend>
+  <exec_depend>simple_launch</exec_depend>
+  <exec_depend>turtlebot3_description</exec_depend>
+  <exec_depend>nav2_common</exec_depend>
+  <exec_depend>hls_lfcd_lds_driver</exec_depend>
+  <exec_depend>turtlebot3_node</exec_depend>
+  <exec_depend>turtlebot3_bringup</exec_depend>
   <export>
     <build_type>ament_cmake</build_type>
   </export>

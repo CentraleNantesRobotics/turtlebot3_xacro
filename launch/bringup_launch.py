@@ -36,7 +36,7 @@ def generate_launch_description():
     sl.declare_arg('usb_port', default_value='/dev/ttyACM0', description='Connected USB port with OpenCR')
     
     sl.declare_arg('tb3_param_dir',
-                   sl.find('turtlebot3_bringup', TURTLEBOT3_MODEL + '.yaml'),
+                   sl.find('turtlebot3_xacro', TURTLEBOT3_MODEL + '.yaml'),
                    description='Full path to turtlebot3 parameter file to load')
     
     with sl.group(ns=name):
