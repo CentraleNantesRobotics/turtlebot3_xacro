@@ -224,6 +224,7 @@
     <parent link="$(arg prefix)camera_rgb_frame"/>
     <child link="$(arg prefix)camera_rgb_optical_frame"/>
   </joint>
+
   <link name="$(arg prefix)camera_rgb_optical_frame"/>
 
 </robot>

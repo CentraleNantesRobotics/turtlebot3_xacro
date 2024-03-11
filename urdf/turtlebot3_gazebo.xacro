@@ -2,9 +2,6 @@
 <robot name="turtlebot3_gazebo" xmlns:xacro="http://ros.org/wiki/xacro">
  
 <!-- Arguments common to all turtlebots -->
- <xacro:arg name="laser_visual"  default="false"/>
- <xacro:arg name="camera_visual" default="false"/>
- <xacro:arg name="imu_visual"    default="false"/>
  <xacro:arg name="prefix"    default=""/>
  <xacro:arg name="cmd_vel_topic"    default="cmd_vel"/>
  <xacro:arg name="odom_topic"    default="odom"/>
@@ -56,14 +53,57 @@
   <material>Gazebo/FlatBlack</material>
 </gazebo>
 
-<gazebo reference="$(arg prefix)imu_link">
-<sensor name="imu_sensor" type="imu">
-    <always_on>1</always_on>
-    <update_rate>20</update_rate>
-    <topic>$(arg prefix)imu</topic>
-    <gz_frame_id>$(arg prefix)imu_link</gz_frame_id>
-</sensor>
-</gazebo>
+  <gazebo reference="$(arg prefix)imu_link">
+    <sensor name="tb3_imu" type="imu">
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <topic>$(arg prefix)imu</topic>
+        <gz_frame_id>$(arg prefix)imu_link</gz_frame_id>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>2e-4</stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type="gaussian">
+                <mean>0.0</mean>
+                <stddev>1.7e-2</stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+    </sensor>
+    <material>Gazebo/Grey</material>
+  </gazebo>
 
  <gazebo>
     <plugin
@@ -75,7 +115,7 @@
       <wheel_radius>0.033</wheel_radius>
       <child_frame_id>$(arg prefix)base_footprint</child_frame_id>
     </plugin>
-        
+
 </gazebo>
 
   <gazebo reference="$(arg prefix)base_scan">
@@ -86,6 +126,8 @@
       <gz_frame_id>$(arg prefix)base_scan</gz_frame_id>
       <visualize>$(arg laser_visual)</visualize>
       <update_rate>5</update_rate>
+      <topic>$(arg prefix)scan</topic>
+      <gz_frame_id>$(arg prefix)base_scan</gz_frame_id>
       <ray>
         <scan>
           <horizontal>
@@ -113,30 +155,39 @@
   <xacro:if value="$(arg use_cam)">
 
   <gazebo reference="$(arg prefix)camera_rgb_frame">
-    <sensor name="camera" type="camera">
-    <camera>
-    <optical_frame_id>$(arg prefix)camera_rgb_optical_frame</optical_frame_id>
-    <horizontal_fov>1.047</horizontal_fov>
-    <image>
-        <width>640</width>
-        <height>400</height>
-    </image>
-    <clip>
-        <near>0.3</near>
-        <far>100</far>
-    </clip>
-    </camera>
-    <always_on>1</always_on>
-    <update_rate>30</update_rate>
-    <visualize>true</visualize>
-    <topic>$(arg prefix)image</topic>
-    <enable_metrics>false</enable_metrics>
-</sensor>
+    <sensor type="camera" name="pi_camera">
+      <always_on>true</always_on>
+      <camera>
+        <optical_frame_id>$(arg prefix)camera_rgb_optical_frame</optical_frame_id>
+          <horizontal_fov>1.085595</horizontal_fov>
+          <image>
+              <width>640</width>
+              <height>480</height>
+              <format>R8G8B8</format>
+          </image>
+          <clip>
+              <near>0.03</near>
+              <far>100</far>
+          </clip>
+      </camera>
+       <topic>$(arg prefix)image</topic>
+      <enable_metrics>false</enable_metrics>
+    </sensor>
+
   </gazebo>
 </xacro:if>
   
    <gazebo>
-      <plugin filename="libgz-sim-joint-state-publisher-system.so" name="gz::sim::systems::JointStatePublisher"/>
+      <plugin filename="libignition-gazebo-joint-state-publisher-system.so" name="ignition::gazebo::systems::JointStatePublisher"/>
+      <plugin
+            filename="ignition-gazebo-pose-publisher-system"
+            name="ignition::gazebo::systems::PosePublisher">
+            <publish_link_pose>false</publish_link_pose>
+            <publish_collision_pose>false</publish_collision_pose>
+            <publish_visual_pose>false</publish_visual_pose>
+            <publish_nested_model_pose>true</publish_nested_model_pose>
+        </plugin>
+
     </gazebo>
     
 </robot>
