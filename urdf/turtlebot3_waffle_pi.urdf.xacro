@@ -151,9 +151,7 @@
     </inertial>
   </link>
 
-  <joint name="imu_joint" type="revolute">
-    <axis xyz="0 0 1"/>
-    <limit effort="1000.0" lower="0.0" upper="0" velocity="0"/>
+  <joint name="imu_joint" type="fixed">
     <parent link="$(arg prefix)base_link"/>
     <child link="$(arg prefix)imu_link"/>
     <origin xyz="0.0 0 0.068" rpy="0 0 0"/>
