@@ -16,7 +16,7 @@ Running `bringup.sh` will launch this file in a detached screen.
 
 Bringup can be run at boot with the package `robot-upstart`.
 
-Meshes are set to package-relative paths (e.g. `$find turtlebot3_description)/meshes/*`) so that a remote computer can find them  even if on a different absolute path, that may happen if using another ROS 2 distro.
+Meshes are set to package-relative paths (e.g. `$(find turtlebot3_description)/meshes/*`) so that a remote computer can find them  even if on a different absolute path, that may happen if using another ROS 2 distro.
 
 ## Upload in Ignition/Gazebo
 
