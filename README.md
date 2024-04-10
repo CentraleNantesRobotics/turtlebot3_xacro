@@ -14,12 +14,13 @@ Assuming you have `simple_launch` and `nav2_common`, running the included `bring
 
 Running `bringup.sh` will launch this file in a detached screen.
 
-Bringup can be run at boot with the package `robot-upstart`.
-
+Bringup can be run at boot with the package `robot-upstart`. Meshes are set to package-relative paths (e.g. `$find turtlebot3_description)/meshes/*` so that a remote computer can find them  even if on a different absolute path, that may happen if using another ROS 2 distro.
 
 ## Upload in Ignition/Gazebo
 
 The `upload_launch.py` will spawn a Turtlebot inside Ignition. Currently only `cmd_vel` and `odom` topics are bridged.
+
+In this case the meshes are changed to their absolute path (e.g. `/path/to/turtlebot3_description/meshes/*` so that Gazebo can find them.
 
 ## Work in progress
 
@@ -27,6 +28,3 @@ Prefixed models:
 
  - `turtlebot3_waffle_pi.urdf.xacro`
  - `turtlebot3_burger.urdf.xacro`
-
- Sensor in Ignition: only odometry, Lidar, IMU and camera upcoming.
-

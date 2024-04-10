@@ -6,7 +6,6 @@
  <xacro:arg name="use_cam" default="false"/> 
  
   <xacro:include filename="$(find turtlebot3_xacro)/urdf/common_properties.xacro"/>
-  <xacro:include filename="$(find turtlebot3_xacro)/urdf/turtlebot3_gazebo.xacro"/>
 
   <link name="$(arg prefix)base_footprint"/>
 
@@ -20,7 +19,7 @@
     <visual>
       <origin xyz="-0.032 0 0.0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="file://$(find turtlebot3_description)/meshes/bases/burger_base.stl" scale="0.001 0.001 0.001"/>
+        <xacro:mesh mesh="bases/burger_base.stl"/>
       </geometry>
       <material name="light_black"/>
     </visual>
@@ -52,7 +51,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="1.57 0 0"/>
       <geometry>
-        <mesh filename="file://$(find turtlebot3_description)/meshes/wheels/left_tire.stl" scale="0.001 0.001 0.001"/>
+        <xacro:mesh mesh="wheels/left_tire.stl"/>
       </geometry>
       <material name="dark"/>
     </visual>
@@ -84,7 +83,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="1.57 0 0"/>
       <geometry>
-        <mesh filename="file://$(find turtlebot3_description)/meshes/wheels/right_tire.stl" scale="0.001 0.001 0.001"/>
+        <xacro:mesh mesh="wheels/right_tire.stl"/>
       </geometry>
       <material name="dark"/>
     </visual>
@@ -146,7 +145,7 @@
     <visual>
       <origin xyz="0 0 0.0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="file://$(find turtlebot3_description)/meshes/sensors/lds.stl" scale="0.001 0.001 0.001"/>
+        <xacro:mesh mesh="sensors/lds.stl"/>
       </geometry>
       <material name="dark"/>
     </visual>

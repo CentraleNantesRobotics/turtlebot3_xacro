@@ -18,40 +18,37 @@ def launch_setup():
     with sl.group(ns=name):
         
         sl.robot_state_publisher('turtlebot3_xacro','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro',
-                                 xacro_args={'prefix': name+'/'})
+                                 xacro_args={'prefix': name+'/', 'gazebo': True})
 
         sl.spawn_gz_model(name, spawn_args = [sl.gazebo_axes_args()])
         
-        bridges = []
-        # joint states
-        gz_js_topic = sl.name_join(GazeboBridge.model_prefix(name),'/joint_state')
-        bridges.append(GazeboBridge(gz_js_topic, 'joint_states', 'sensor_msgs/JointState', GazeboBridge.gz2ros))
+        #bridges = []
+        ## joint states
+        #gz_js_topic = GazeboBridge.model_prefix(name)+'/joint_state'
+        #bridges.append(GazeboBridge(gz_js_topic, 'joint_states', 'sensor_msgs/JointState', GazeboBridge.gz2ros))
         
-        if sl.arg('gt'):
-            bridges.append(GazeboBridge(f'/model/{name}/pose',
-                                     'pose_gt', 'geometry_msgs/Pose', GazeboBridge.gz2ros))
-            sl.node('pose_to_tf', parameters={'child_frame': name + '/base_footprint'})
-        else:
-            bridges.append(GazeboBridge(f'/model/{name}/odometry',
-                            'odom', 'nav_msgs/Odometry', GazeboBridge.gz2ros))
-            bridges.append(GazeboBridge(f'/model/{name}/tf',
-                        '/tf', 'tf2_msgs/msg/TFMessage', GazeboBridge.gz2ros))
+        #if sl.arg('gt'):
+            #bridges.append(GazeboBridge(f'/model/{name}/pose',
+                                     #'pose_gt', 'geometry_msgs/Pose', GazeboBridge.gz2ros))
+            #sl.node('pose_to_tf', parameters={'child_frame': name + '/base_footprint'})
+        #else:
+            #bridges.append(GazeboBridge(f'/model/{name}/odometry',
+                            #'odom', 'nav_msgs/Odometry', GazeboBridge.gz2ros))
+            #bridges.append(GazeboBridge(f'/model/{name}/tf',
+                        #'/tf', 'tf2_msgs/msg/TFMessage', GazeboBridge.gz2ros))
         
-        bridges.append(GazeboBridge(GazeboBridge.model_topic(name, 'cmd_vel'),
-                                     'cmd_vel', 'geometry_msgs/Twist', GazeboBridge.ros2gz))
+        #bridges.append(GazeboBridge(GazeboBridge.model_topic(name, 'cmd_vel'),
+                                     #'cmd_vel', 'geometry_msgs/Twist', GazeboBridge.ros2gz))
 
-        bridges.append(GazeboBridge(name+'/imu', 'imu', 'sensor_msgs/Imu', GazeboBridge.gz2ros))
+        #bridges.append(GazeboBridge(name+'/imu', 'imu', 'sensor_msgs/Imu', GazeboBridge.gz2ros))
 
-        bridges.append(GazeboBridge(name+'/image', 'image', 'sensor_msgs/Image', GazeboBridge.gz2ros))
+        #bridges.append(GazeboBridge(name+'/image', 'image', 'sensor_msgs/Image', GazeboBridge.gz2ros))
 
-<<<<<<< HEAD
-        # LiDAR
-        bridges.append(GazeboBridge(name/'scan/points', 'scan', 'sensor_msgs/LaserScan', GazeboBridge.gz2ros))
-=======
-        bridges.append(GazeboBridge(name+'/scan', 'scan', 'sensor_msgs/LaserScan', GazeboBridge.gz2ros))
->>>>>>> f3c9fba7637718bd8feb5191f013157e3beddd3d
+        ## LiDAR
+        #bridges.append(GazeboBridge(name/'scan/points', 'scan', 'sensor_msgs/LaserScan', GazeboBridge.gz2ros))
+        #bridges.append(GazeboBridge(name+'/scan', 'scan', 'sensor_msgs/LaserScan', GazeboBridge.gz2ros))
 
-        sl.create_gz_bridge(bridges)
+        #sl.create_gz_bridge(bridges)
         
         if sl.arg('gui'):
             sl.node('slider_publisher', arguments=[sl.find('slider_publisher', 'Twist.yaml')])

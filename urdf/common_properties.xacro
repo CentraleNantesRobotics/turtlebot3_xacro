@@ -41,4 +41,20 @@
   <material name="white">
     <color rgba="1.0 1.0 1.0 1.0"/>
   </material>
+
+ <xacro:arg name="gazebo" default="false"/>
+
+ <xacro:if value="$(arg gazebo)">
+   <xacro:include filename="$(find turtlebot3_xacro)/urdf/turtlebot3_gazebo.xacro"/>
+ </xacro:if>
+
+ <xacro:macro name="mesh" params="mesh">
+   <xacro:if value="$(arg gazebo)">
+     <mesh filename="file://$(find turtlebot3_description)/meshes/${mesh}" scale="0.001 0.001 0.001"/>
+   </xacro:if>
+   <xacro:unless value="$(arg gazebo)">
+     <mesh filename="package://turtlebot3_description/meshes/${mesh}" scale="0.001 0.001 0.001"/>
+   </xacro:unless>
+ </xacro:macro>
+
 </robot>
