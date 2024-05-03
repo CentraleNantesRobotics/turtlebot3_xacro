@@ -1,8 +1,7 @@
 import os
-from simple_launch import SimpleLauncher, GazeboBridge
+from simple_launch import SimpleLauncher
 
 sl = SimpleLauncher(use_sim_time=True)
-
 sl.declare_arg('name', 'turtlebot')
 
 
