@@ -1,4 +1,4 @@
-Panels:
+=Panels:
   - Class: rviz_common/Displays
     Help Height: 87
     Name: Displays
@@ -172,7 +172,7 @@ Visualization Manager:
         Durability Policy: Volatile
         History Policy: Keep Last
         Reliability Policy: Reliable
-        Value: /turtlebot/image
+        Value: /turtlebot/image_raw
       Value: true
     - Angle Tolerance: 0.10000000149011612
       Class: rviz_default_plugins/Odometry
