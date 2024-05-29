@@ -44,8 +44,9 @@ def generate_launch_description():
         sl.robot_state_publisher('turtlebot3_xacro','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro',
                                  xacro_args={'prefix': name+'/'})
         
-        sl.include('hls_lfcd_lds_driver', 'hlds_laser.launch.py',
-                   launch_arguments={'port': '/dev/ttyUSB0', 'frame_id': name/'base_scan'})
+        sl.node('hls_lfcd_lds_driver', 'hlds_laser_publisher',
+            parameters={'port': '/dev/ttyUSB0', 'frame_id': name/'base_scan'},
+            output='screen')
         
         configured_params = RewrittenYaml(
                             source_file=sl.arg('tb3_param_dir'),
