@@ -1,6 +1,6 @@
 from simple_launch import SimpleLauncher
 
-sl = SimpleLauncher()
+sl = SimpleLauncher(use_sim_time=False)
 sl.declare_arg('name', 'waffle1')
 
 

@@ -26,7 +26,7 @@ from nav2_common.launch import RewrittenYaml
 def generate_launch_description():
     TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
     
-    sl = SimpleLauncher()
+    sl = SimpleLauncher(use_sim_time=False)
     
     # all happens in this namespace
     

@@ -5,7 +5,7 @@ import os
 
 def generate_launch_description():
     
-    sl = SimpleLauncher()
+    sl = SimpleLauncher(use_sim_time=False)
     name = sl.declare_arg('name', os.uname().nodename)
 
     with sl.group(ns=name):
