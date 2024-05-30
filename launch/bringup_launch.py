@@ -34,11 +34,13 @@ def generate_launch_description():
     sl.declare_arg('cam', True)
     sl.declare_arg('usb_port', default_value='/dev/ttyACM0', description='Connected USB port with OpenCR')
     sl.declare_arg('imu', False)
+    sl.declare_arg('rsp', True)
 
     with sl.group(ns=name):
         
-        sl.robot_state_publisher('turtlebot3_xacro','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro',
-                                 xacro_args={'prefix': name+'/'})
+        with sl.group(if_arg='rsp'):
+            sl.robot_state_publisher('turtlebot3_xacro','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro',
+                                    xacro_args={'prefix': name+'/'})
         
         sl.node('hls_lfcd_lds_driver', 'hlds_laser_publisher',
             parameters={'port': '/dev/ttyUSB0', 'frame_id': name/'base_scan'},
