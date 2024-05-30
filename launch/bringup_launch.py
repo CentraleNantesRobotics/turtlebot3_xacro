@@ -32,13 +32,9 @@ def generate_launch_description():
     
     name = sl.declare_arg('name', os.uname().nodename)
     sl.declare_arg('cam', True)
-    
     sl.declare_arg('usb_port', default_value='/dev/ttyACM0', description='Connected USB port with OpenCR')
-    
-    sl.declare_arg('tb3_param_dir',
-                   sl.find('turtlebot3_xacro', TURTLEBOT3_MODEL + '.yaml'),
-                   description='Full path to turtlebot3 parameter file to load')
-    
+    sl.declare_arg('imu', False)
+
     with sl.group(ns=name):
         
         sl.robot_state_publisher('turtlebot3_xacro','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro',
@@ -47,12 +43,13 @@ def generate_launch_description():
         sl.node('hls_lfcd_lds_driver', 'hlds_laser_publisher',
             parameters={'port': '/dev/ttyUSB0', 'frame_id': name/'base_scan'},
             output='screen')
-        
+
         configured_params = RewrittenYaml(
-                            source_file=sl.arg('tb3_param_dir'),
+                            source_file=sl.find('turtlebot3_node', TURTLEBOT3_MODEL + '.yaml'),
                             root_key=name,
                             param_rewrites={'frame_id': name/'odom',
-                                            'child_frame_id': name/'base_footprint'},
+                                            'child_frame_id': name/'base_footprint',
+                                            'use_imu': sl.arg('imu')},
                             convert_types=True)
 
         sl.node('turtlebot3_node', 'turtlebot3_ros',
