@@ -56,7 +56,10 @@ def generate_launch_description():
 
         sl.node('turtlebot3_node', 'turtlebot3_ros',
                 parameters=[configured_params],
-                arguments=['-i', sl.arg('usb_port')])
+                arguments=['-i', sl.arg('usb_port')],
+                remappings = {'cmd_vel': 'cmd_vel_scaled'})
+
+        sl.node('turtlebot3_xacro', 'cmd_vel_scale.py')
 
     with sl.group(if_arg='cam'):
         sl.include('turtlebot3_xacro', 'cam_launch.py', launch_arguments={'name': name})

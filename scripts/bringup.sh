@@ -1,3 +1,3 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
 
-screen -d -m bash -c "ros2 launch turtlebot3_xacro bringup_launch.py ${@: 1}"
+screen -dm ros2 launch turtlebot3_xacro bringup_launch.py "${@}"
