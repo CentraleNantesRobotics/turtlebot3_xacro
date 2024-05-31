@@ -51,15 +51,15 @@ def generate_launch_description():
                             root_key=name,
                             param_rewrites={'frame_id': name/'odom',
                                             'child_frame_id': name/'base_footprint',
-                                            'use_imu': sl.arg('imu')},
+                                            'use_imu': sl.arg('imu'),
+                                            'max_vel': '0.26'},
                             convert_types=True)
 
         sl.node('turtlebot3_node', 'turtlebot3_ros',
-                parameters=[configured_params],
-                arguments=['-i', sl.arg('usb_port')],
-                remappings = {'cmd_vel': 'cmd_vel_scaled'})
+                parameters=[configured_params, {}],
+                arguments=['-i', sl.arg('usb_port')])
 
-        sl.node('turtlebot3_xacro', 'cmd_vel_scale.py')
+        #sl.node('turtlebot3_xacro', 'cmd_vel_scale.py')
 
     with sl.group(if_arg='cam'):
         sl.include('turtlebot3_xacro', 'cam_launch.py', launch_arguments={'name': name})

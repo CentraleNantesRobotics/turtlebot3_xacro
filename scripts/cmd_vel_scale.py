@@ -22,8 +22,8 @@ class Scaler(Node):
         v = twist.linear.x
         w = twist.angular.z
 
-        vl = v + self.base*w
-        vr = v - self.base*w
+        vl = v + self.base*w/2
+        vr = v - self.base*w/2
 
         scale = max(abs(vl), abs(vr))/self.vmax
 
