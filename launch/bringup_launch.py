@@ -21,7 +21,7 @@
 import os
 from simple_launch import SimpleLauncher
 from nav2_common.launch import RewrittenYaml
-
+from ament_index_python.packages import get_package_share_directory, PackageNotFoundError
 
 def generate_launch_description():
     TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
@@ -35,6 +35,12 @@ def generate_launch_description():
     sl.declare_arg('usb_port', default_value='/dev/ttyACM0', description='Connected USB port with OpenCR')
     sl.declare_arg('imu', False)
     sl.declare_arg('rsp', True)
+
+    try:
+        custom_odom = get_package_share_directory('turtlebot3_odom')
+    except PackageNotFoundError:
+        custom_odom = None
+
 
     with sl.group(ns=name):
         
@@ -55,16 +61,20 @@ def generate_launch_description():
                                             'publish_tf': 'False'},
                             convert_types=True)
 
-        sl.node('turtlebot3_node', 'turtlebot3_ros',
-                parameters=[configured_params, {}],
-                arguments=['-i', sl.arg('usb_port')],
-                remappings = {'cmd_vel': 'cmd_vel_scaled', 'odom': 'odom_wrong'})
+        remappings = {}
 
-        # run bug-free odom and cmd
-        sl.node('turtlebot3_odom', 'odometry',
+        if custom_odom:
+            # run bug-free odom and cmd
+            sl.node('turtlebot3_odom', 'odometry',
                 parameters = {'wheels.max_vel': 0.26,
                               'odom.frame_id': name/'odom',
                               'odom.child_frame_id': name/'base_footprint'})
+            remappings = {'cmd_vel': 'cmd_vel_scaled', 'odom': 'odom_wrong'}
+
+        sl.node('turtlebot3_node', 'turtlebot3_ros',
+                parameters=[configured_params, {}],
+                arguments=['-i', sl.arg('usb_port')],
+                remappings = remappings)
 
     with sl.group(if_arg='cam'):
         sl.include('turtlebot3_xacro', 'cam_launch.py', launch_arguments={'name': name})
