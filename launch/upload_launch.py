@@ -33,7 +33,7 @@ def launch_setup():
             sl.node('pose_to_tf', parameters={'child_frame': name + '/base_footprint'})
         else:
             bridges.append(GazeboBridge(f'/model/{name}/odometry',
-                            'odom', 'nav_msgs/Odometry', GazeboBridge.gz2ros))
+                            'odom', 'nav_msgs/Odometry', GazeboBridge.gz2ros, gz_msg='gz.msgs.Odometry'))
             bridges.append(GazeboBridge(f'/model/{name}/tf',
                         '/tf', 'tf2_msgs/msg/TFMessage', GazeboBridge.gz2ros))
         

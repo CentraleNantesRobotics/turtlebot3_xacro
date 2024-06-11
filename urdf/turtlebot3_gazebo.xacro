@@ -122,8 +122,6 @@
     <material>Gazebo/FlatBlack</material>
     <sensor type="gpu_ray" name="lds_lfcd_sensor">
 <!--       <pose>0 0 0 0 0 0</pose> -->
-      <topic>$(arg prefix)scan</topic>
-      <gz_frame_id>$(arg prefix)base_scan</gz_frame_id>
       <update_rate>5</update_rate>
       <topic>$(arg prefix)scan</topic>
       <gz_frame_id>$(arg prefix)base_scan</gz_frame_id>
