@@ -38,9 +38,9 @@ def generate_launch_description():
 
     try:
         custom_odom = get_package_share_directory('turtlebot3_odom')
+        custom_odom = True
     except PackageNotFoundError:
-        custom_odom = None
-
+        custom_odom = False
 
     with sl.group(ns=name):
         
@@ -58,7 +58,7 @@ def generate_launch_description():
                             param_rewrites={'frame_id': name/'odom',
                                             'child_frame_id': name/'base_footprint',
                                             'use_imu': sl.arg('imu'),
-                                            'publish_tf': 'False'},
+                                            'publish_tf': str(not custom_odom)},
                             convert_types=True)
 
         remappings = {}
