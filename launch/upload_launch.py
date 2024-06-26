@@ -51,7 +51,7 @@ def launch_setup():
         sl.create_gz_bridge(bridges)
         
         if sl.arg('gui'):
-            sl.node('slider_publisher', arguments=[sl.find('slider_publisher', 'Twist.yaml')])
+            sl.node('slider_publisher', arguments=[sl.find('turtlebot3_xacro', 'Twist.yaml')])
 
     return sl.launch_description()
 
