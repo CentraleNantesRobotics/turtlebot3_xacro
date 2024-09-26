@@ -26,27 +26,21 @@ from ament_index_python.packages import get_package_share_directory, PackageNotF
 sl = SimpleLauncher(use_sim_time=False)
 sl.declare_arg('name', os.uname().nodename)
 sl.declare_arg('cam', True, description='Run the camera node')
+sl.declare_arg('odom', True, description='Use improved odom and velocity scaling')
 sl.declare_arg('usb_port', default_value='/dev/ttyACM0', description='Connected USB port with OpenCR')
 sl.declare_arg('imu', False, description='Use the IMU (differential magneto for basic node, EKF with custom one')
 sl.declare_arg('rsp', True, description='Run the robot_state_publisher')
 
+
 def launch_setup():
     TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
-
     
     # all happens in this namespace
     name = sl.arg('name')
 
-    try:
-        custom_odom = get_package_share_directory('turtlebot3_odom')
-        custom_odom = True
-    except PackageNotFoundError:
-        custom_odom = False
-
-    node_remappings = {}
+    custom_odom = sl.arg('odom')
     node_imu = sl.arg('imu') and not custom_odom
     rsp = sl.arg('rsp') or (custom_odom and sl.arg('imu'))
-    odom_remappings = {}
 
     with sl.group(ns=name):
         
@@ -67,6 +61,8 @@ def launch_setup():
                                             'publish_tf': str(not custom_odom)},
                             convert_types=True)
 
+        node_remappings = {}
+        odom_remappings = {}
         if custom_odom:
             # run bug-free odom and cmd
             if sl.arg('imu'):
@@ -83,8 +79,13 @@ def launch_setup():
                     parameters=[ekf_params],
                     remappings={'odometry/filtered': 'odom'})
 
-            #sl.node('turtlebot3_odom', 'odometry',
-            sl.node('turtlebot3_xacro', 'odometry.py',
+            try:
+                get_package_share_directory('turtlebot3_odom')
+                pkg, node = 'turtlebot3_odom', 'odometry'
+            except PackageNotFoundError:
+                pkg, node = 'turtlebot3_xacro', 'odometry.py'
+
+            sl.node(pkg, node,
                 parameters = {'wheels.max_vel': 0.26,
                               'odom.frame_id': name/'odom',
                               'odom.child_frame_id': name/'base_footprint'},
@@ -101,5 +102,6 @@ def launch_setup():
         sl.include('turtlebot3_xacro', 'cam_launch.py', launch_arguments={'name': name})
 
     return sl.launch_description()
+
 
 generate_launch_description = sl.launch_description(launch_setup)
