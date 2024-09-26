@@ -87,8 +87,8 @@ def launch_setup():
 
             sl.node(pkg, node,
                 parameters = {'wheels.max_vel': 0.26,
-                              'odom.frame_id': name/'odom',
-                              'odom.child_frame_id': name/'base_footprint'},
+                              'odom.frame_id': f'{name}/odom',
+                              'odom.child_frame_id': f'{name}/base_footprint'},
                 remappings = odom_remappings)
 
             node_remappings = {'cmd_vel': 'cmd_vel_scaled', 'odom': 'odom_wrong'}
