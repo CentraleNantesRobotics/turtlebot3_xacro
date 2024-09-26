@@ -98,7 +98,7 @@ def launch_setup():
                 arguments=['-i', sl.arg('usb_port')],
                 remappings = node_remappings)
 
-    with sl.group(if_arg='cam'):
+    if sl.arg('cam'):
         sl.include('turtlebot3_xacro', 'cam_launch.py', launch_arguments={'name': name})
 
     return sl.launch_description()

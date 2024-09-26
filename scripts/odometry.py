@@ -53,7 +53,7 @@ class TurtleOdometry(Node):
         else:
             self.br = None
 
-        self.js_sub = self.create_subscription(JointState, "joint_states", 10, self.update)
+        self.js_sub = self.create_subscription(JointState, "joint_states", self.update, 10)
         self.t_prev = None
         self.angle_prev = [0., 0.]
 
@@ -75,7 +75,7 @@ class TurtleOdometry(Node):
 
         if Wheel.vmax > 0:
             self.cmb_pub = self.create_publisher(Twist, 'cmd_vel_scaled', 1)
-            self.cmd_sub = self.create_subscription(Twist, 'cmd_vel', 1, self.scale)
+            self.cmd_sub = self.create_subscription(Twist, 'cmd_vel', self.scale, 1)
 
     def scale(self, v: Twist):
         scaled = v
