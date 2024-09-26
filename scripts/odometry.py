@@ -50,17 +50,15 @@ class TurtleOdometry(Node):
             self.tf = TransformStamped()
             self.tf.header.frame_id = self.odom.header.frame_id
             self.tf.child_frame_id = self.odom.child_frame_id
+            self.odom_pub = self.create_publisher(Odometry, "odom", 10)
         else:
             self.br = None
+            # probably some EKF
+            self.odom_pub = self.create_publisher(Odometry, "odom_raw", 10)
 
         self.js_sub = self.create_subscription(JointState, "joint_states", self.update, 10)
         self.t_prev = None
         self.angle_prev = [0., 0.]
-        if pub_tf:
-            self.odom_pub = self.create_publisher(Odometry, "odom", 10)
-        else:
-            # probably some EKF
-            self.odom_pub = self.create_publisher(Odometry, "odom_raw", 10)
 
         self.odom.pose.covariance[0] = 0.05
         self.odom.pose.covariance[7] = 0.05
