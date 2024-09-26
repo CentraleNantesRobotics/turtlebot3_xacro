@@ -53,13 +53,13 @@ def launch_setup():
             output='screen')
 
         configured_params = RewrittenYaml(
-                            source_file=sl.find('turtlebot3_node', TURTLEBOT3_MODEL + '.yaml'),
-                            root_key=name,
-                            param_rewrites={'frame_id': f'{name}/odom',
-                                            'child_frame_id': f'{name}/base_footprint',
-                                            'use_imu': str(node_imu),
-                                            'publish_tf': str(not custom_odom)},
-                            convert_types=True)
+            source_file=sl.find('turtlebot3_node', TURTLEBOT3_MODEL + '.yaml'),
+            root_key=name,
+            param_rewrites={'frame_id': f'{name}/odom',
+                            'child_frame_id': f'{name}/base_footprint',
+                            'use_imu': str(node_imu),
+                            'publish_tf': str(not custom_odom)},
+            convert_types=True)
 
         node_remappings = {}
         odom_remappings = {}
@@ -69,11 +69,11 @@ def launch_setup():
                 odom_remappings = {'odom': 'odom_raw'}
 
                 ekf_params = RewrittenYaml(
-                        source_file = sl.find('turtlebot3_xacro', 'ekf.yaml'),
-                        root_key = name,
-                        param_rewrites={'odom_frame': f'{name}/odom',
-                                        'base_link_frame': f'{name}/base_footprint'},
-                        convert_types=True)
+                    source_file = sl.find('turtlebot3_xacro', 'ekf.yaml'),
+                    root_key = name,
+                    param_rewrites={'odom_frame': f'{name}/odom',
+                                    'base_link_frame': f'{name}/base_footprint'},
+                    convert_types=True)
 
                 sl.node('robot_localization', 'ekf_node',
                     parameters=[ekf_params],
