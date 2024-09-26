@@ -56,8 +56,11 @@ class TurtleOdometry(Node):
         self.js_sub = self.create_subscription(JointState, "joint_states", self.update, 10)
         self.t_prev = None
         self.angle_prev = [0., 0.]
-
-        self.odom_pub = self.create_publisher(Odometry, "odom", 10)
+        if pub_tf:
+            self.odom_pub = self.create_publisher(Odometry, "odom", 10)
+        else:
+            # probably some EKF
+            self.odom_pub = self.create_publisher(Odometry, "odom_raw", 10)
 
         self.odom.pose.covariance[0] = 0.05
         self.odom.pose.covariance[7] = 0.05
