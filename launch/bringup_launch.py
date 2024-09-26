@@ -23,18 +23,19 @@ from simple_launch import SimpleLauncher
 from nav2_common.launch import RewrittenYaml
 from ament_index_python.packages import get_package_share_directory, PackageNotFoundError
 
-def generate_launch_description():
+sl = SimpleLauncher(use_sim_time=False)
+sl.declare_arg('name', os.uname().nodename)
+sl.declare_arg('cam', True, description='Run the camera node')
+sl.declare_arg('usb_port', default_value='/dev/ttyACM0', description='Connected USB port with OpenCR')
+sl.declare_arg('imu', False, description='Use the IMU (differential magneto for basic node, EKF with custom one')
+sl.declare_arg('rsp', True, description='Run the robot_state_publisher')
+
+def launch_setup():
     TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
-    
-    sl = SimpleLauncher(use_sim_time=False)
+
     
     # all happens in this namespace
-    
-    name = sl.declare_arg('name', os.uname().nodename)
-    sl.declare_arg('cam', True)
-    sl.declare_arg('usb_port', default_value='/dev/ttyACM0', description='Connected USB port with OpenCR')
-    sl.declare_arg('imu', False)
-    sl.declare_arg('rsp', True)
+    name = sl.arg('name')
 
     try:
         custom_odom = get_package_share_directory('turtlebot3_odom')
@@ -42,41 +43,63 @@ def generate_launch_description():
     except PackageNotFoundError:
         custom_odom = False
 
+    node_remappings = {}
+    node_imu = sl.arg('imu') and not custom_odom
+    rsp = sl.arg('rsp') or (custom_odom and sl.arg('imu'))
+    odom_remappings = {}
+
     with sl.group(ns=name):
         
-        with sl.group(if_arg='rsp'):
+        if rsp:
             sl.robot_state_publisher('turtlebot3_xacro','turtlebot3_' + TURTLEBOT3_MODEL + '.urdf.xacro',
                                     xacro_args={'prefix': name+'/'})
         
         sl.node('hls_lfcd_lds_driver', 'hlds_laser_publisher',
-            parameters={'port': '/dev/ttyUSB0', 'frame_id': name/'base_scan'},
+            parameters={'port': '/dev/ttyUSB0', 'frame_id': f'{name}/base_scan'},
             output='screen')
 
         configured_params = RewrittenYaml(
                             source_file=sl.find('turtlebot3_node', TURTLEBOT3_MODEL + '.yaml'),
                             root_key=name,
-                            param_rewrites={'frame_id': name/'odom',
-                                            'child_frame_id': name/'base_footprint',
-                                            'use_imu': sl.arg('imu'),
+                            param_rewrites={'frame_id': f'{name}/odom',
+                                            'child_frame_id': f'{name}/base_footprint',
+                                            'use_imu': str(node_imu),
                                             'publish_tf': str(not custom_odom)},
                             convert_types=True)
 
-        remappings = {}
-
         if custom_odom:
             # run bug-free odom and cmd
-            sl.node('turtlebot3_odom', 'odometry',
+            if sl.arg('imu'):
+                odom_remappings = {'odom': 'odom_raw'}
+
+                ekf_params = RewrittenYaml(
+                        source_file = sl.find('turtlebot3_xacro', 'ekf.yaml'),
+                        root_key = name,
+                        param_rewrites={'odom_frame': f'{name}/odom',
+                                        'base_link_frame': f'{name}/base_footprint'},
+                        convert_types=True)
+
+                sl.node('robot_localization', 'ekf_node',
+                    parameters=[ekf_params],
+                    remappings={'odometry/filtered': 'odom'})
+
+            #sl.node('turtlebot3_odom', 'odometry',
+            sl.node('turtlebot3_xacro', 'odometry.py',
                 parameters = {'wheels.max_vel': 0.26,
                               'odom.frame_id': name/'odom',
-                              'odom.child_frame_id': name/'base_footprint'})
-            remappings = {'cmd_vel': 'cmd_vel_scaled', 'odom': 'odom_wrong'}
+                              'odom.child_frame_id': name/'base_footprint'},
+                remappings = odom_remappings)
+
+            node_remappings = {'cmd_vel': 'cmd_vel_scaled', 'odom': 'odom_wrong'}
 
         sl.node('turtlebot3_node', 'turtlebot3_ros',
                 parameters=[configured_params, {}],
                 arguments=['-i', sl.arg('usb_port')],
-                remappings = remappings)
+                remappings = node_remappings)
 
     with sl.group(if_arg='cam'):
         sl.include('turtlebot3_xacro', 'cam_launch.py', launch_arguments={'name': name})
 
     return sl.launch_description()
+
+generate_launch_description = sl.launch_description(launch_setup)
