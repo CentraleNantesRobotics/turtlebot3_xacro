@@ -88,7 +88,7 @@ class TurtleOdometry(Node):
         if dt is None:
             return
 
-        self.odom.twist.twist.linear.x = .5*(wl+wr)*Wheel.rad
+        v = self.odom.twist.twist.linear.x = .5*(wl+wr)*Wheel.rad
         w = self.odom.twist.twist.angular.z = (wr-wl)*Wheel.rad/Wheel.separation
 
         # update pose
