@@ -33,7 +33,7 @@ sl.declare_arg('rsp', True, description='Run the robot_state_publisher')
 
 
 def launch_setup():
-    TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
+    TURTLEBOT3_MODEL = os.environ.get('TURTLEBOT3_MODEL', 'waffle_pi')
     
     # all happens in this namespace
     name = sl.arg('name')

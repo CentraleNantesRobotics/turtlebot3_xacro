@@ -11,7 +11,7 @@ sl.declare_arg('gt', False, description = 'If Gazebo should publish the odometry
 
 def launch_setup():
 
-    TURTLEBOT3_MODEL = os.environ['TURTLEBOT3_MODEL']
+    TURTLEBOT3_MODEL = os.environ.get('TURTLEBOT3_MODEL', 'waffle_pi')
     
     name = sl.arg('name')
     
